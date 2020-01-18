@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import classs from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit'
+import withClass from '../hoc/withClass';
+import Aux from '../hoc/Aux';
 
 class App extends Component {
   constructor(props) {
@@ -17,7 +19,9 @@ class App extends Component {
       { id: 'qw2e', name: 'Zaki', age: 23 }
     ],
     showPersons: false,
-    showCockpit: true
+    showCockpit: true,
+    counter: 0,
+    authanticated: false
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -61,8 +65,11 @@ class App extends Component {
     person.name = event.target.value;
     const persons = [...this.state.persons];
     persons[personIdx] = person;
-    this.setState({
-      persons: persons
+    this.setState((prevState, props) => {
+      return {
+        persons: persons,
+        counter: prevState.counter + 1
+      }
     });
   }
 
@@ -81,6 +88,12 @@ class App extends Component {
     })
   }
 
+  loginHandler = () => {
+    this.setState({
+      authanticated: true
+    })
+  }
+
   render() {
     console.log('---render---');
     let persons = null;
@@ -88,22 +101,24 @@ class App extends Component {
       persons = <Persons 
             persons={this.state.persons}
             clicked={this.deletePersonHandler}
-            changed={this.nameChangedHandler} />;
+            changed={this.nameChangedHandler}
+            auth={this.state.authanticated} />;
     }
 
     return (
       // <StyleRoot>
-        <div className={classs.App}>
+        <Aux>
             <button onClick={() => this.setState({ showCockpit: false })}>Remove Cockpit</button>
             {
               this.state.showCockpit ? <Cockpit
               title={this.props.title}
               personsLength={this.state.persons.length} 
               showPersons={this.state.showPersons}
-              clicked={this.showPersonsHandler}/> : null
+              clicked={this.showPersonsHandler}
+              login={this.loginHandler}/> : null
             }
             {persons}
-        </div>
+        </Aux>
       // {/* </StyleRoot> */}
     );
     // return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hi I\'am React App Dev'))
@@ -111,4 +126,4 @@ class App extends Component {
 }
 
 // export default Radium(App);
-export default App;
+export default withClass(App, classs.App);

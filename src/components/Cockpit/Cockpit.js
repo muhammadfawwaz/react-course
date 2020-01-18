@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import classs from './Cockpit.css';
 
 const cockpit = (props) => {
+    const toggle = useRef(null);
+    
     useEffect(() => {
         console.log('---useEffect cockpit');
-        setTimeout(() => {
-            alert('SAVED!!!');
-        });
+        // setTimeout(() => {
+        //     alert('SAVED!!!');
+        // });
+        toggle.current.click();
         return () => {
             console.log('---cleanup work in useEffect cockpit');
         };
@@ -32,7 +35,10 @@ const cockpit = (props) => {
             <p className={ classes.join(' ') }>It's conditional</p>
             <button 
                 onClick={props.clicked}
+                ref={toggle}
                 className={btnClass}>Toggle Persons</button>
+            <button
+                onClick={props.login}>Login</button>
         </div>
     );
 }

@@ -1,32 +1,45 @@
 import React, { Component } from 'react';
 import classs from './App.css';
 import Persons from '../components/Persons/Persons';
-// import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
-
-// import styled from 'styled-components';
-// import Radium, { StyleRoot } from 'radium'
-
-// const StyledButton = styled.button`
-//   background-color: ${props => props.alt ? 'red' : 'green'};
-//   color: white;
-//   font: inherit;
-//   border: 1px solid blue;
-//   padding: 8px;
-//   cursor: pointer;
-//   &:hover {
-//      background-color: ${props => props.alt ? 'salmon' : 'lightgreen'};
-//      color: black;
-//   }
-// `;
+import Cockpit from '../components/Cockpit/Cockpit'
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    console.log('---constructor---');
+    //u can set state with this.state.persons = 
+  }
+
   state = {
     persons: [
       { id: 'dw32', name: 'Afif', age: 22 },
       { id: 'sq2w', name: 'Dzulfi', age: 23 },
       { id: 'qw2e', name: 'Zaki', age: 23 }
     ],
-    showPersons: false
+    showPersons: false,
+    showCockpit: true
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log('---getDerivedStateFromProps---', props, state);
+    return state;
+  }
+
+  // UNSAFE_componentWillMount() {
+  //   console.log('---componentWillMount---');
+  // }
+
+  componentDidMount() {
+    console.log('---componentDidMount---');
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('---shouldComponentUpdate---');
+    return true;
+  }
+
+  componentDidUpdate() {
+    console.log('---componentDidUpdate---');
   }
 
   switchNameHandler = (newName) => {
@@ -69,38 +82,26 @@ class App extends Component {
   }
 
   render() {
-
-    let btnClass = '';
-
-    // const style = {
-    //   backgroundColor: 'green',
-    //   color: 'white',
-    //   font: 'inherit',
-    //   border: '1px solid blue',
-    //   padding: '8px',
-    //   cursor: 'pointer',
-    //   // ':hover': {
-    //   //   backgroundColor: 'lightgreen',
-    //   //   color: 'black'
-    //   // }
-    // }
-
+    console.log('---render---');
     let persons = null;
     if(this.state.showPersons) {
-      persons = (
-        <div>
-          <Persons 
+      persons = <Persons 
             persons={this.state.persons}
             clicked={this.deletePersonHandler}
-            changed={this.nameChangedHandler}
-          />
-        </div>
-      )
+            changed={this.nameChangedHandler} />;
     }
 
     return (
       // <StyleRoot>
         <div className={classs.App}>
+            <button onClick={() => this.setState({ showCockpit: false })}>Remove Cockpit</button>
+            {
+              this.state.showCockpit ? <Cockpit
+              title={this.props.title}
+              personsLength={this.state.persons.length} 
+              showPersons={this.state.showPersons}
+              clicked={this.showPersonsHandler}/> : null
+            }
             {persons}
         </div>
       // {/* </StyleRoot> */}
